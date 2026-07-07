@@ -28,7 +28,7 @@ app.get("/products", (req, res) => {
         { id: 8, name: "Product 8", price: 80 },
         { id: 9, name: "Product 9", price: 90 },
         { id: 10, name: "Product 10", price: 100 },
-        { id: 11, name: "Product 111111", price: 110 },
+        { id: 11, name: "Product 11111", price: 110 },
     ];
     res.json(products);
 });
