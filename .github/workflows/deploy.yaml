@@ -23,7 +23,7 @@ jobs:
             cd ~/microservices
 
             echo "Pulling latest code..."
-            git pull
+            git pull origin main
 
             echo "Stopping containers..."
             sudo docker compose down
