@@ -8,7 +8,7 @@ app.use(express.json());
 const port = 5000;
 
 app.get("/", (req, res) => {
-    res.send(`Hello from ${process.env.SERVER} gateway server using CI/CD !`);
+    res.send(`Hello from ${process.env.SERVER} gateway server using CI/CD pipeline!`);
 });
 
 app.use("/product", proxy("http://product:3003"));
