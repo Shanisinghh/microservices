@@ -1,0 +1,100 @@
+services:
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis-stack
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis-data:/data
+  #   command: redis-server --appendonly yes
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 10
+  #   restart: unless-stopped
+
+  # mongo:
+  #   image: mongo:latest
+  #   container_name: mongo-db
+  #   ports:
+  #     - "27017:27017"
+  #   volumes:
+  #     - mongo-data:/data/db
+  #   restart: unless-stopped
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - server1
+      - server2
+      - server3
+    restart: unless-stopped
+
+  auth:
+    build: ./auth
+    container_name: auth-service
+    ports:
+      - "3001:3001"
+
+    restart: unless-stopped
+  product:
+    build: ./product
+    container_name: product-service
+    ports:
+      - "3003:3003"
+
+    restart: unless-stopped
+  payment:
+    build: ./payment
+    container_name: payment-service
+    ports:
+      - "3002:3002"
+
+    restart: unless-stopped
+  server1:
+    build: ./gateway
+    container_name: node-server1
+    ports:
+      - "5001:5000"
+
+    environment:
+      SERVER: server1
+    depends_on:
+     - auth
+     - product
+     - payment 
+
+    restart: unless-stopped
+
+  server2:
+    build: ./gateway
+    container_name: node-server2
+    ports:
+      - "5002:5000"
+    environment:
+      SERVER: server2
+    depends_on:
+     - auth
+     - product
+     - payment 
+    restart: unless-stopped
+
+  server3:
+    build: ./gateway
+    container_name: node-server3
+    ports:
+      - "5003:5000"
+
+    environment:
+      SERVER: server3
+    depends_on:
+     - auth
+     - product
+     - payment 
+    restart: unless-stopped
