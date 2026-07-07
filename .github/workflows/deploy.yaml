@@ -16,20 +16,11 @@ jobs:
       - name: Deploy to EC2 by SSH
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{secrets.SSH_HOST}}
           username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{secrets.SSH_KEY}}
           script: |
             cd ~/microservices
-
-            echo "Pulling latest code..."
-            git pull origin main
-
-            echo "Stopping containers..."
+            git pull
             sudo docker compose down
-
-            echo "Building new images..."
             sudo docker compose up -d --build
-
-
-            echo "Deployment completed successfully!"
