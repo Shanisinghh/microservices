@@ -11,38 +11,16 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Deploy to EC2 by SSH
+        uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{secrets.SSH_HOST}}
           username: ubuntu
-          key: ${{ secrets.SSH_KEY }}
+          key: ${{secrets.SSH_KEY}}
           script: |
-            set -e
-
             cd ~/microservices
-
-            echo "Current Branch:"
-            git branch
-
-            echo "Fetching latest code..."
-            git fetch origin
-
-            echo "Resetting to latest main..."
-            git reset --hard origin/main
-
-            echo "Stopping containers..."
+            git pull origin main
             sudo docker compose down
-
-            echo "Removing old images..."
-            sudo docker compose down --rmi all
-
-            echo "Building latest images..."
-            sudo docker compose build --no-cache
-
-            echo "Starting containers..."
-            sudo docker compose up -d
-
-            echo "Deployment Completed!"
+            sudo docker compose up -d --build
